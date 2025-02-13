@@ -1,0 +1,68 @@
+name: Test `Test Runs Actions`
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      workspace_id:
+        description: "Workspace ID"
+        required: true
+      test_run_name:
+        description: "Test Run Name"
+        required: true
+      dataset_id:
+        description: "Dataset ID"
+        required: true
+      workflow_id:
+        description: "Workflow ID (do not use with prompt_version_id)"
+        required: false
+      prompt_version_id:
+        description: "Prompt Version ID (do not use with workflow_id)"
+        required: false
+      context_to_evaluate:
+        description: "Variable name to evaluate; could be any variable used in the workflow/prompt or a column name"
+        required: false
+      evaluators:
+        description: "Comma-separated list of evaluator names"
+        required: false
+      human_evaluation_emails:
+        description: "Comma-separated list of emails to send human evaluations to"
+        required: false
+      human_evaluation_instructions:
+        description: "Human evaluation instructions"
+        required: false
+      concurrency:
+        description: "Number of concurrent test runs (defaults to 10)"
+        required: false
+      timeout_in_minutes:
+        description: "Fail if test run takes longer than this many minutes (defaults to 15 minutes)"
+        required: false
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Running Test Run
+        uses: ./test-runs
+        with:
+          api_key: ${{ secrets.MAXIM_API_KEY }}
+          workspace_id: ${{ github.event.inputs.workspace_id }}
+          test_run_name: ${{ github.event.inputs.test_run_name }}
+          dataset_id: ${{ github.event.inputs.dataset_id }}
+          workflow_id: ${{ github.event.inputs.workflow_id }}
+          prompt_version_id: ${{ github.event.inputs.prompt_version_id }}
+          context_to_evaluate: ${{ github.event.inputs.context_to_evaluate }}
+          evaluators: ${{ github.event.inputs.evaluators }}
+          human_evaluation_emails: ${{ github.event.inputs.human_evaluation_emails }}
+          human_evaluation_instructions: ${{ github.event.inputs.human_evaluation_instructions }}
+          concurrency: ${{ github.event.inputs.concurrency }}
+          timeout_in_minutes: ${{ github.event.inputs.timeout_in_minutes }}
+          
