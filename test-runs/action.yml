@@ -1,0 +1,53 @@
+name: "maxim-test-run-action"
+description: "Triggers test runs based on the given parameters."
+author: "Maxim Engineering"
+
+inputs:
+    api_key:
+        description: "Maxim API key"
+        required: true
+    workspace_id:
+        description: "Workspace ID"
+        required: true
+    test_run_name:
+        description: "Test Run Name"
+        required: true
+    dataset_id:
+        description: "Dataset ID"
+        required: true
+    workflow_id:
+        description: "Workflow ID (do not use with prompt_version_id)"
+        required: false
+    prompt_version_id:
+        description: "Prompt Version ID (do not use with workflow_id)"
+        required: false
+    context_to_evaluate:
+        description: "Variable name to evaluate; could be any variable used in the workflow / prompt or a column name"
+        required: false
+    evaluators:
+        description: "Comma separated list of evaluator names"
+        required: false
+    human_evaluation_emails:
+        description: "Comma separated list of emails to send human evaluations to"
+        required: false
+    human_evaluation_instructions:
+        description: "Human evaluation instructions"
+        required: false
+    concurrency:
+        description: "Number of concurrent test runs (defaults to 10)"
+        required: false
+    timeout_in_minutes:
+        description: "Fail if test run takes longer than this many minutes (defaults to 15 minutes)"
+        required: false
+
+outputs:
+    test_run_result:
+        description: "Test Run Result (only available if test run passes)"
+    test_run_report_url:
+        description: "Test Run Report URL (only available if test run passes)"
+    test_run_failed_indices:
+        description: "Test Run Failed Indices"
+
+runs:
+    using: "node20"
+    main: "index.js"
