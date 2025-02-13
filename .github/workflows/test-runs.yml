@@ -5,9 +5,6 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
-      workspace_id:
-        description: "Workspace ID"
-        required: true
       test_run_name:
         description: "Test Run Name"
         required: true
@@ -54,7 +51,7 @@ jobs:
         uses: ./test-runs
         with:
           api_key: ${{ secrets.MAXIM_API_KEY }}
-          workspace_id: ${{ github.event.inputs.workspace_id }}
+          workspace_id: "cm4qluf0p0047bhrlic3nf301"
           test_run_name: ${{ github.event.inputs.test_run_name }}
           dataset_id: ${{ github.event.inputs.dataset_id }}
           workflow_id: ${{ github.event.inputs.workflow_id }}
