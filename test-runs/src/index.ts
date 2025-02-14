@@ -28,11 +28,11 @@ async function run(): Promise<void> {
 			contextToEvaluate: core.getInput("context_to_evaluate"),
 			evaluators:
 				core.getInput("evaluators") && core.getInput("evaluators").includes(",")
-					? core.getInput("evaluators").replace(", ", ",").split(",")
+					? core.getInput("evaluators").replaceAll(", ", ",").split(",")
 					: undefined,
 			humanEvaluationEmails:
 				core.getInput("human_evaluation_emails") && core.getInput("human_evaluation_emails").includes(",")
-					? core.getInput("human_evaluation_emails").replace(", ", ",").split(",")
+					? core.getInput("human_evaluation_emails").replaceAll(", ", ",").split(",")
 					: undefined,
 			humanEvaluationInstructions: core.getInput("human_evaluation_instructions"),
 			concurrency,
