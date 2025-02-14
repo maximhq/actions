@@ -1,0 +1,73 @@
+name: Test `Test Runs Actions` Released
+
+# Controls when the workflow will run
+on:
+    # Allows you to run this workflow manually from the Actions tab
+    workflow_dispatch:
+        inputs:
+            test_run_name:
+                description: "Test run name"
+                required: true
+            dataset_id:
+                description: "Dataset ID"
+                required: true
+            workflow_id:
+                description: "Workflow ID"
+                required: false
+            prompt_version_id:
+                description: "Prompt version ID"
+                required: false
+            context_to_evaluate:
+                description: "Variable name to evaluate"
+                required: false
+            evaluators:
+                description: "Evaluator names"
+                required: false
+            human_evaluation_emails:
+                description: "Human evaluation emails"
+                required: false
+            human_evaluation_instructions:
+                description: "Human evaluation instructions"
+                required: false
+            concurrency:
+                description: "Concurrency"
+                required: false
+            timeout_in_minutes:
+                description: "Timeout (in minutes)"
+                required: false
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+    # This workflow contains a single job called "build"
+    build:
+        # The type of runner that the job will run on
+        runs-on: ubuntu-latest
+
+        # Steps represent a sequence of tasks that will be executed as part of the job
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v2
+            - name: Install jq
+              run: sudo apt-get install -y jq
+            - name: Running Test Run
+              id: test_run
+              uses: maximhq/actions/test-runs@v1
+              with:
+                  api_key: ${{ secrets.MAXIM_API_KEY }}
+                  workspace_id: cm4qluf0p0047bhrlic3nf301
+                  test_run_name: ${{ github.event.inputs.test_run_name }}
+                  dataset_id: ${{ github.event.inputs.dataset_id }}
+                  workflow_id: ${{ github.event.inputs.workflow_id }}
+                  prompt_version_id: ${{ github.event.inputs.prompt_version_id }}
+                  context_to_evaluate: ${{ github.event.inputs.context_to_evaluate }}
+                  evaluators: ${{ github.event.inputs.evaluators }}
+                  human_evaluation_emails: ${{ github.event.inputs.human_evaluation_emails }}
+                  human_evaluation_instructions: ${{ github.event.inputs.human_evaluation_instructions }}
+                  concurrency: ${{ github.event.inputs.concurrency }}
+                  timeout_in_minutes: ${{ github.event.inputs.timeout_in_minutes }}
+            - name: Display Test Run Outputs
+              if: success()
+              run: |
+                  printf '%s\n' '${{ steps.test_run.outputs.test_run_result }}' | jq .
+                  printf '%s\n' '${{ steps.test_run.outputs.test_run_failed_indices }}' | jq .
+                  echo 'Test Run Report URL: ${{ steps.test_run.outputs.test_run_report_url }}'
